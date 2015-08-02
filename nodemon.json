@@ -1,6 +1,1 @@
-{
-  "watch": ["src"],
-  "ext": "ts",
-  "ignore": ["src/**/*.spec.ts"],
-  "exec": "ts-node ./src/server.ts"
-}
+"Sun Aug 02 2015 15:02:00 GMT-0700 (Pacific Daylight Time)" 
