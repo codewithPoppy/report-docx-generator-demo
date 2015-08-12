@@ -1,15 +1,1 @@
-const fs = require('fs')
-
-if (!fs.existsSync("./test/output"))
-  fs.mkdirSync("./test/output")
-
-module.exports = {
-  preset: "ts-jest",
-  testEnvironment: "node",
-  reporters: [
-    "default",
-    ["./node_modules/jest-html-reporter", {
-      "pageTitle": "Test Report"
-    }]
-  ]
-};
+"Wed Aug 12 2015 13:03:00 GMT-0700 (Pacific Daylight Time)" 
