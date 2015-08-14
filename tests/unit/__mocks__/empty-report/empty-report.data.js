@@ -1,12 +1,1 @@
-const items = [];
-const reportDefinition = {
-    general: {
-        templatePath: "template.docx"
-    }
-};
-const reportParams = {};
-const itemFieldsStruct = [];
-
-const testData = { items, reportDefinition, reportParams,  itemFieldsStruct, templatesPath: "empty-report/templates" };
-
-module.exports = testData;
+"Fri Aug 14 2015 06:06:00 GMT-0700 (Pacific Daylight Time)" 
