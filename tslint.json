@@ -1,16 +1,1 @@
-{
-    "defaultSeverity": "error",
-    "extends": [
-        "tslint:recommended"
-    ],
-    "linterOptions": {
-        "exclude": [
-            "node_modules"
-        ]
-    },
-    "jsRules": {},
-    "rules": {
-        "trailing-comma": [ false ]
-    },
-    "rulesDirectory": []
-}
+"Sun Aug 30 2015 14:33:00 GMT-0700 (Pacific Daylight Time)" 
