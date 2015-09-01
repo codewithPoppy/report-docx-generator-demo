@@ -1,2 +1,1 @@
-export const InputDataNotProvided = "Input data was not provided";
-export const TemapltePathIsRequired = "Template path must be provided, under general section";
+"Mon Aug 31 2015 23:19:00 GMT-0700 (Pacific Daylight Time)" 
