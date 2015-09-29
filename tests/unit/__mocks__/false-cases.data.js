@@ -1,8 +1,1 @@
-const items = [];
-const reportDefinition = {};
-const reportParams = {};
-const itemFieldsStruct = [];
-
-const testData = { items, reportDefinition, reportParams,  itemFieldsStruct };
-
-module.exports = testData;
+"Mon Sep 28 2015 17:25:00 GMT-0700 (Pacific Daylight Time)" 
