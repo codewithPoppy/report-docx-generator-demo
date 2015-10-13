@@ -1,13 +1,1 @@
-import { IReportResult } from "../../src/report-generator";
-import { Server } from "../../src/server";
-import { getResult, saveResultAsFile } from "./test-utils";
-import testData from "./__mocks__/empty-report/empty-report.data";
-
-describe("Empty positive reports", () => {
-    it("Empty params produce empty report", async () =>  {
-        const server = new Server();
-        const result: IReportResult = await server.test(testData);
-        expect(result.valid).toBeTruthy();
-        expect(result.content).toMatchSnapshot();
-    });
-});
+"Mon Oct 12 2015 23:30:00 GMT-0700 (Pacific Daylight Time)" 
