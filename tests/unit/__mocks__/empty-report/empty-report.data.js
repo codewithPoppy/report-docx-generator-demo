@@ -1,1 +1,12 @@
-"Fri Dec 11 2015 15:28:00 GMT-0800 (Pacific Standard Time)" 
+const items = [];
+const reportDefinition = {
+    general: {
+        templatePath: "template.docx"
+    }
+};
+const reportParams = {};
+const itemFieldsStruct = [];
+
+const testData = { items, reportDefinition, reportParams,  itemFieldsStruct, templatesPath: "empty-report/templates" };
+
+module.exports = testData;

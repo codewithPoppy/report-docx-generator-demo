@@ -1,1 +1,9 @@
-"Fri Dec 18 2015 23:58:00 GMT-0800 (Pacific Standard Time)" 
+export const FIELD_TYPES = {
+  STRING: 0,
+  NUMBER: 1,
+  PICTURE: 2,
+  DATE: 3,
+  EXPRESSION: 4,
+  DROPDOWN: 5,
+  TEXT_AREA: 6
+};

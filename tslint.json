@@ -1,1 +1,16 @@
-"Wed Dec 02 2015 05:26:00 GMT-0800 (Pacific Standard Time)" 
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:recommended"
+    ],
+    "linterOptions": {
+        "exclude": [
+            "node_modules"
+        ]
+    },
+    "jsRules": {},
+    "rules": {
+        "trailing-comma": [ false ]
+    },
+    "rulesDirectory": []
+}

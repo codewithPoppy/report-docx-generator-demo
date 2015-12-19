@@ -1,1 +1,23 @@
-"Tue Dec 15 2015 08:52:00 GMT-0800 (Pacific Standard Time)" 
+{
+  "general": {
+    "templatePath": "template.docx"
+  },
+  "placeholderMetadata": [
+    {
+      "key": "table",
+      "type": 2
+    }
+  ],
+  "readyComponents": [
+    {
+      "fieldsToShow": [
+        "TEXT1",
+        "DROPDOWN1"
+      ],
+      "key": "table",
+      "type": 1,
+      "sortByField": "NUMBER0",
+      "sortByDirection": "desc"
+    }
+  ]
+}

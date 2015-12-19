@@ -1,1 +1,21 @@
-"Fri Dec 18 2015 07:04:00 GMT-0800 (Pacific Standard Time)" 
+/**
+ * Items data handler
+ */
+export class RelativeFileFinder {
+  private _folder = "";
+
+  constructor() {
+    /* Do nothing */
+  }
+
+  /**
+   * Load the items from JSON file
+   */
+  public setFolder(defintionPath: string) {
+    this._folder = defintionPath;
+  }
+
+  public getFolder(): string {
+    return this._folder;
+  }
+}

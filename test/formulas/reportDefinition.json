@@ -1,1 +1,46 @@
-"Tue Dec 08 2015 05:49:00 GMT-0800 (Pacific Standard Time)" 
+{
+  "settings": {},
+  "general": {
+    "templatePath": "template.docx"
+  },
+  "formulas": [
+    {
+      "key": "list",
+      "type": "LIST",
+      "field": "TEXT1",
+      "condition": {
+        "filterType": "ABOVE",
+        "field": "NUMBER0",
+        "value": "2"
+      }
+    },
+    {
+      "key": "sum",
+      "type": "SUM",
+      "field": "NUMBER0",
+      "condition": {
+          "filterType": "CONTAINS",
+          "field": "TEXT1",
+            "value":"מה נשמע האם זה עובד טוב יותר עכשיוי? האם א"
+      }
+    },
+    {
+      "key": "date",
+      "type": "DATE"
+    },
+    {
+      "key": "count",
+      "type": "COUNT",
+      "condition": {
+        "filterType": "UNDER",
+        "field": "NUMBER0",
+        "value": "2"
+      }
+    },
+    {
+      "key": "avg",
+      "type": "AVG",
+      "field": "NUMBER0"
+    }
+  ]
+}

@@ -1,1 +1,11 @@
-"Fri Dec 11 2015 18:51:00 GMT-0800 (Pacific Standard Time)" 
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - echo "running the tests"
+      - npm install
+      - npm run test
+  post_build:
+    commands:
+      - aws s3 cp ./test-report.html s3://client-tests-reports/test-report.html

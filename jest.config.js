@@ -1,1 +1,15 @@
-"Fri Nov 27 2015 05:57:00 GMT-0800 (Pacific Standard Time)" 
+const fs = require('fs')
+
+if (!fs.existsSync("./test/output"))
+  fs.mkdirSync("./test/output")
+
+module.exports = {
+  preset: "ts-jest",
+  testEnvironment: "node",
+  reporters: [
+    "default",
+    ["./node_modules/jest-html-reporter", {
+      "pageTitle": "Test Report"
+    }]
+  ]
+};

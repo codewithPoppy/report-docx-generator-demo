@@ -1,1 +1,67 @@
-"Thu Dec 17 2015 16:24:00 GMT-0800 (Pacific Standard Time)" 
+[
+  {
+    "techName": "DROPDOWN0",
+    "label": "Dropdown",
+    "type": 5
+  },
+  {
+    "techName": "NUMBER0",
+    "label": "Numeric 2",
+    "type": 1
+  },
+  {
+    "techName": "NUMBER1",
+    "label": "How many?",
+    "type": 1
+  },
+  {
+    "techName": "DATE0",
+    "label": "Due date",
+    "type": 3
+  },
+  {
+    "techName": "DROPDOWN1",
+    "label": "Where",
+    "type": 5
+  },
+  {
+    "techName": "PICTURE0",
+    "label": "Image",
+    "type": 2
+  },
+  {
+    "techName": "TEXT1",
+    "label": "Name",
+    "type": 0
+  },
+  {
+    "techName": "EXPRESSION0",
+    "label": "Calc",
+    "type": 4
+  },
+  {
+    "techName": "TEXTAREA0",
+    "label": "Long one",
+    "type": 6
+  },
+  {
+    "techName": "sumAllNumber",
+    "label": "Sum of it",
+    "type": 0
+  },
+  {
+    "techName": "numberGrouped",
+    "label": "Num",
+    "type": 0
+  },
+  {
+    "techName": "avgOfNumbers",
+    "label": "Avarage",
+    "type": 0
+  },
+  {
+    "techName": "countAllNumber",
+    "label": "Count",
+    "type": 0
+  }
+]

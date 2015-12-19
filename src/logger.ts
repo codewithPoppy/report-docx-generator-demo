@@ -1,1 +1,8 @@
-"Fri Dec 11 2015 06:05:00 GMT-0800 (Pacific Standard Time)" 
+const logger = class {
+  constructor(name: string) {}
+  info(log: string, obj?: any) { console.log(log, obj); };
+  error(err: string, obj?: any) { console.error(err, obj); };
+  debug(err: string, obj?: any) { console.debug(err, obj); };
+};
+
+export default logger;
