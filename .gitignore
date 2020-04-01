@@ -1,0 +1,12 @@
+.idea
+.vscode
+.gitmodules
+.nyc_output
+coverage
+build
+dist
+node_modules
+test/output
+.env
+test-report.html
+package-lock.json

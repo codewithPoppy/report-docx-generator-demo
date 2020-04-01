@@ -1,0 +1,11 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - echo "running the tests"
+      - npm install
+      - npm run test
+  post_build:
+    commands:
+      - aws s3 cp ./test-report.html s3://client-tests-reports/test-report.html

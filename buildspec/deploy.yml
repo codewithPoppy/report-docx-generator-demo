@@ -1,0 +1,25 @@
+version: 0.2
+
+phases:
+  
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws --version
+
+  build:
+    commands:
+      - echo Build started on `date`
+    
+  post_build:
+    commands:
+
+      - aws ecs update-service --cluster $FARGATE_CLUSTER_NAME --service $FARGATE_SERVICE_NAME --force-new-deployment --region $REGION
+      
+      - |
+        if [ "$Branch" = "development" ] ; then
+            aws codecommit merge-branches-by-fast-forward --region eu-central-1 \
+            --repository-name worker \
+            --source-commit-specifier development \
+            --destination-commit-specifier master
+        fi   

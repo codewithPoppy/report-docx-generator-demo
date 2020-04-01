@@ -1,0 +1,9 @@
+export const FIELD_TYPES = {
+  STRING: 0,
+  NUMBER: 1,
+  PICTURE: 2,
+  DATE: 3,
+  EXPRESSION: 4,
+  DROPDOWN: 5,
+  TEXT_AREA: 6
+};
