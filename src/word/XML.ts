@@ -67,11 +67,12 @@ export class XML {
     imgId: string,
     width: number,
     height: number,
-    caption?: string
+    caption?: string,
+    useSampleCx: boolean = true
   ): string {
     let img = ``;
-    const cx = 1428750;
-    const cy = Math.round((cx * height) / width);
+    const cx = useSampleCx ? 1428750 : width;
+    const cy = useSampleCx ? Math.round((cx * height) / width) : height;
 
     /* Check if the caption must be showed */
     if (caption) {
@@ -284,7 +285,7 @@ export class XML {
       img += XML.unescape(`<w:r><w:t>${imgTitle}:&#160;</w:t></w:r>`);
     }
 
-    img += XML.addImage(imgId, width, height);
+    img += XML.addImage(imgId, width * 10000, height * 10000, imgTitle, false);
     img += XML.endParagraph();
     return img;
   }

@@ -5,7 +5,6 @@ import PizZip from "pizzip";
 import { v4 } from "uuid";
 import { IPlaceholders } from "../data/Placeholders";
 import { Context } from "../context";
-import { FilesProvider } from "../files-provider";
 import Logger from "../logger";
 import { XML } from "./XML";
 import { IFormula } from "@/data/Formulas";
@@ -82,7 +81,11 @@ export class Templater {
 
     /* Check if the image file exists */
     const realFilename = path.resolve(
-      path.resolve(this._context.getRelativeFileFinder().getFolder(), this.imgPath, filename)
+      path.resolve(
+        this._context.getRelativeFileFinder().getFolder(),
+        this.imgPath,
+        filename
+      )
     );
 
     if (!fs.existsSync(realFilename)) {
@@ -98,7 +101,9 @@ export class Templater {
     this._zipTemplate.file("word/media/" + baseName, image, { binary: true });
 
     /* Update the document relationship to handle the image */
-    const relations: any = this._zipTemplate.file("word/_rels/document.xml.rels");
+    const relations: any = this._zipTemplate.file(
+      "word/_rels/document.xml.rels"
+    );
     const result = xml.xml2js(relations.asText());
     const imgId = result.elements[0].elements.length + 1;
     result.elements[0].elements.push({
@@ -107,8 +112,36 @@ export class Templater {
       attributes: {
         Id: "rId" + imgId,
         Type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image",
-        Target: "media/" + baseName
-      }
+        Target: "media/" + baseName,
+      },
+    });
+    this._zipTemplate.file("word/_rels/document.xml.rels", xml.js2xml(result));
+
+    return `${imgId}`;
+  }
+
+  public attachImageBuffer(image: Buffer): string | null {
+    /* Ensure media folder exists */
+    this._zipTemplate.folder("word/media");
+
+    /* Add the image content to the document */
+    const baseName = v4() + ".bin";
+    this._zipTemplate.file("word/media/" + baseName, image, { binary: true });
+
+    /* Update the document relationship to handle the image */
+    const relations: any = this._zipTemplate.file(
+      "word/_rels/document.xml.rels"
+    );
+    const result = xml.xml2js(relations.asText());
+    const imgId = result.elements[0].elements.length + 1;
+    result.elements[0].elements.push({
+      type: "element",
+      name: "Relationship",
+      attributes: {
+        Id: "rId" + imgId,
+        Type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image",
+        Target: "media/" + baseName,
+      },
     });
     this._zipTemplate.file("word/_rels/document.xml.rels", xml.js2xml(result));
 
@@ -123,21 +156,24 @@ export class Templater {
     if (!relations) {
       return {
         declaration: {
-          attributes: { version: "1.0", encoding: "UTF-8", standalone: "yes" }
+          attributes: { version: "1.0", encoding: "UTF-8", standalone: "yes" },
         },
         elements: [
           {
             type: "element",
             name: "w:styles",
             attributes: {
-              "xmlns:w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main",
-              "xmlns:w14": "http://schemas.microsoft.com/office/word/2010/wordml",
-              "xmlns:mc": "http://schemas.openxmlformats.org/markup-compatibility/2006",
-              "mc:Ignorable": "w14"
+              "xmlns:w":
+                "http://schemas.openxmlformats.org/wordprocessingml/2006/main",
+              "xmlns:w14":
+                "http://schemas.microsoft.com/office/word/2010/wordml",
+              "xmlns:mc":
+                "http://schemas.openxmlformats.org/markup-compatibility/2006",
+              "mc:Ignorable": "w14",
             },
-            elements: []
-          }
-        ]
+            elements: [],
+          },
+        ],
       };
     }
 
@@ -160,21 +196,23 @@ export class Templater {
     if (!relations) {
       return {
         declaration: {
-          attributes: { version: "1.0", encoding: "UTF-8", standalone: "yes" }
+          attributes: { version: "1.0", encoding: "UTF-8", standalone: "yes" },
         },
         elements: [
           {
             type: "element",
             name: "w:numbering",
             attributes: {
-              "xmlns:w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main",
+              "xmlns:w":
+                "http://schemas.openxmlformats.org/wordprocessingml/2006/main",
               "xmlns:o": "urn:schemas-microsoft-com:office:office",
-              "xmlns:r": "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
-              "xmlns:v": "urn:schemas-microsoft-com:vml"
+              "xmlns:r":
+                "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
+              "xmlns:v": "urn:schemas-microsoft-com:vml",
             },
-            elements: []
-          }
-        ]
+            elements: [],
+          },
+        ],
       };
     }
 
@@ -215,11 +253,17 @@ export class Templater {
     const props = this.getTag(doc.elements[0].elements[0].elements, "w:sectPr");
     const size = this.getTag(props.elements, "w:pgSz");
     const margins = this.getTag(props.elements, "w:pgMar");
-    this._realWidth = !size || !size.attributes["w:w"] ? 16840 : size.attributes["w:w"];
-    this._realHeight = !size || !size.attributes["w:h"] ? 11907 : size.attributes["w:h"];
+    this._realWidth =
+      !size || !size.attributes["w:w"] ? 16840 : size.attributes["w:w"];
+    this._realHeight =
+      !size || !size.attributes["w:h"] ? 11907 : size.attributes["w:h"];
     if (margins) {
-      this._realWidth = this._realWidth - margins.attributes["w:left"] - margins.attributes["w:right"];
-      this._realHeight = this._realHeight -
+      this._realWidth =
+        this._realWidth -
+        margins.attributes["w:left"] -
+        margins.attributes["w:right"];
+      this._realHeight =
+        this._realHeight -
         margins.attributes["w:top"] -
         margins.attributes["w:bottom"] -
         margins.attributes["w:header"] -
@@ -248,10 +292,15 @@ export class Templater {
     /* Check for valid filename */
     if (
       !input ||
-      !fs.existsSync(path.resolve(this._context.getRelativeFileFinder().getFolder(), input))
+      !fs.existsSync(
+        path.resolve(this._context.getRelativeFileFinder().getFolder(), input)
+      )
     ) {
       this._logger.error("Input template file cannot be found", {
-        template: path.resolve(this._context.getRelativeFileFinder().getFolder(), input)
+        template: path.resolve(
+          this._context.getRelativeFileFinder().getFolder(),
+          input
+        ),
       });
       return;
     }
@@ -279,8 +328,8 @@ export class Templater {
       name: "Default",
       attributes: {
         Extension: "bin",
-        ContentType: "application/octet-stream"
-      }
+        ContentType: "application/octet-stream",
+      },
     });
 
     /* Save the content types */
@@ -294,7 +343,7 @@ export class Templater {
   /**
    * Replace the markups with the real data
    */
-  public replace() {
+  public async replace(): Promise<string> {
     const zip = this._docTemplate.getZip();
 
     let prId = 1;
@@ -304,7 +353,10 @@ export class Templater {
 
       if (f.name === "word/document.xml") {
         // Add Attachments
-        txt = txt.replace(new RegExp("<w:sectPr", "g"), this.getAttachmentsXML() + "<w:sectPr");
+        txt = txt.replace(
+          new RegExp("<w:sectPr", "g"),
+          this.getAttachmentsXML() + "<w:sectPr"
+        );
 
         // Replace Margins
         const newMargin = this.settings.margin;
@@ -387,13 +439,17 @@ export class Templater {
             const hDoc = zip.file("word/document.xml");
 
             if (!hDoc) {
-              this._logger.error("Invalid header template. Template is not a Word document.");
+              this._logger.error(
+                "Invalid header template. Template is not a Word document."
+              );
               process.exit(-1);
             }
 
             const hDocXML = hDoc.asText();
 
-            const headerReferences = hDocXML.match(/(<w:headerReference).+?\/>/g);
+            const headerReferences = hDocXML.match(
+              /(<w:headerReference).+?\/>/g
+            );
 
             if (headerReferences) {
               for (const headerRef of headerReferences) {
@@ -420,13 +476,17 @@ export class Templater {
             const hDoc = zip.file("word/document.xml");
 
             if (!hDoc) {
-              this._logger.error("Invalid footer template. Template is not a Word document.");
+              this._logger.error(
+                "Invalid footer template. Template is not a Word document."
+              );
               process.exit(-1);
             }
 
             const hDocXML = hDoc.asText();
 
-            const headerReferences = hDocXML.match(/(<w:footerReference).+?\/>/g);
+            const headerReferences = hDocXML.match(
+              /(<w:footerReference).+?\/>/g
+            );
 
             if (headerReferences) {
               for (const headerRef of headerReferences) {
@@ -451,9 +511,15 @@ export class Templater {
             const oldOrient = orients[orients?.length - 1];
 
             if (oldOrient) {
-              toInsert = toInsert.replace(oldOrient, 'w:orient="' + newOrient + '"');
+              toInsert = toInsert.replace(
+                oldOrient,
+                'w:orient="' + newOrient + '"'
+              );
             } else {
-              toInsert = toInsert.replace("/>", ' w:orient="' + newOrient + '" />');
+              toInsert = toInsert.replace(
+                "/>",
+                ' w:orient="' + newOrient + '" />'
+              );
             }
 
             const widths = oldSz.match(/w:w=".+?"/g) || [];
@@ -470,9 +536,15 @@ export class Templater {
               (newOrient === "landscape" && width < height) ||
               (newOrient === "portrait" && height < width)
             ) {
-              toInsert = toInsert.replace('w:w="' + width + '"', 'w:w="' + height + '"');
+              toInsert = toInsert.replace(
+                'w:w="' + width + '"',
+                'w:w="' + height + '"'
+              );
 
-              toInsert = toInsert.replace('w:h="' + height + '"', 'w:h="' + width + '"');
+              toInsert = toInsert.replace(
+                'w:h="' + height + '"',
+                'w:h="' + width + '"'
+              );
             }
 
             txt = txt.replace(new RegExp(oldSz, "g"), toInsert);
@@ -496,37 +568,45 @@ export class Templater {
     const objData: any = {};
 
     /* Iterate each placeholder */
-    this._context
-      .getPlaceholders()
-      .value()
-      .forEach((placeholder: IPlaceholders) => {
-        switch (placeholder.type) {
-          /* Project fields information */
-          case 1:
-            /* Add the project field to be replaced into the document */
-            objData[placeholder.key] = this._context
-              .getProjectFields()
-              .value(this._context, placeholder.key, placeholder.shouldWriteLabel || false);
-            break;
+    let placeholders: IPlaceholders[] = this._context.getPlaceholders().value();
+    for (let i = 0; i < placeholders.length; i++) {
+      let placeholder = placeholders[i];
+      switch (placeholder.type) {
+        /* Project fields information */
+        case 1:
+          /* Add the project field to be replaced into the document */
+          objData[placeholder.key] = this._context
+            .getProjectFields()
+            .value(
+              this._context,
+              placeholder.key,
+              placeholder.shouldWriteLabel || false
+            );
+          break;
 
-          /* Ready components information */
-          case 2:
-            /* Add the ready component to be replaced into the document */
-            objData[placeholder.key] = this._context
-              .getReadyComponents()
-              .value(this._context, placeholder.key);
-            break;
+        /* Ready components information */
+        case 2:
+          /* Add the ready component to be replaced into the document */
+          objData[placeholder.key] = await this._context
+            .getReadyComponents()
+            .value(this._context, placeholder.key);
+          break;
 
-          /* Invalid placeholder type */
-          default:
-            this._logger.error("Invalid placeholder type for key", { key: placeholder.key });
-        }
-      });
+        /* Invalid placeholder type */
+        default:
+          this._logger.error("Invalid placeholder type for key", {
+            key: placeholder.key,
+          });
+      }
+    }
 
     /* Add all formulas */
     this._context.formulas.values.forEach((formula: IFormula) => {
       /* Add the formula to be replaced into the document */
-      objData[formula.key] = this._context.formulas.value(this._context, formula.key);
+      objData[formula.key] = this._context.formulas.value(
+        this._context,
+        formula.key
+      );
     });
 
     /* Add the table of content */
@@ -568,7 +648,10 @@ export class Templater {
     docTxt = docTxt.replace(new RegExp("%END_TAG%", "g"), ">");
     docTxt = docTxt.replace(new RegExp("%START_TAG%", "g"), "<");
     docTxt = docTxt.replace(new RegExp("%QUOT%", "g"), '"');
-    docTxt = docTxt.replace(/#\$#\$REMOVE_START\$#\$#[^]+?#\$#\$REMOVE_END\$#\$#/g, "");
+    docTxt = docTxt.replace(
+      /#\$#\$REMOVE_START\$#\$#[^]+?#\$#\$REMOVE_END\$#\$#/g,
+      ""
+    );
     zip.file("word/document.xml", docTxt);
     return docTxt;
   }
@@ -580,7 +663,10 @@ export class Templater {
       const element = this.attachmentsDefinition[i];
 
       const content = this.prepareTemplateToImport(
-        path.resolve(this._context.getRelativeFileFinder().getFolder(), element.path)
+        path.resolve(
+          this._context.getRelativeFileFinder().getFolder(),
+          element.path
+        )
       );
 
       // let content = fs.readFileSync(
@@ -595,7 +681,9 @@ export class Templater {
 
       const data: { [id: string]: string } = {};
 
-      const originalData = this.attachmentsData.find((x) => x.key === element.key);
+      const originalData = this.attachmentsData.find(
+        (x) => x.key === element.key
+      );
 
       if (originalData !== null && originalData !== undefined) {
         for (const attData of originalData.values) {
@@ -629,7 +717,10 @@ export class Templater {
    * Returns the prepared zip file
    * @param filename The File name
    */
-  public prepareTemplateToImport(filename: string, isHeaderOrFooter?: boolean): any {
+  public prepareTemplateToImport(
+    filename: string,
+    isHeaderOrFooter?: boolean
+  ): any {
     const b64Acc = Date.now().toString();
 
     this.importedTemplates++;
@@ -712,7 +803,10 @@ export class Templater {
             // eslint-disable-next-line no-prototype-builtins
             if (relationsReplacement.hasOwnProperty(key)) {
               const element = relationsReplacement[key];
-              txt = txt.replace(new RegExp('="' + key + '"', "g"), '="' + element + '"');
+              txt = txt.replace(
+                new RegExp('="' + key + '"', "g"),
+                '="' + element + '"'
+              );
             }
           }
           zip.file(f.name, txt);
@@ -725,7 +819,7 @@ export class Templater {
           const bin = oldFile.asBinary();
 
           this._zipTemplate.file("word/" + newTarget, bin, {
-            binary: true
+            binary: true,
           });
         }
 
@@ -738,7 +832,9 @@ export class Templater {
             if (matches) {
               for (let i = 0; i < matches.length; i++) {
                 const relMatch = matches[i];
-                const oldPath = relMatch.replace('Target="', "").replace('"', "");
+                const oldPath = relMatch
+                  .replace('Target="', "")
+                  .replace('"', "");
                 const newTxt = relMatch.replace(
                   /[^\/]+?\.[^\"]+/,
                   "T_" + b64Acc + this.importedTemplates + "$&.bin"
@@ -750,13 +846,18 @@ export class Templater {
                 if (oldAssetFile) {
                   const assetBin = oldAssetFile.asBinary();
                   this._zipTemplate.file("word/" + newPath, assetBin, {
-                    binary: true
+                    binary: true,
                   });
                 }
               }
             }
             this._zipTemplate.file(
-              "word/_rels/" + "T_" + b64Acc + this.importedTemplates + filename![0] + ".rels",
+              "word/_rels/" +
+                "T_" +
+                b64Acc +
+                this.importedTemplates +
+                filename![0] +
+                ".rels",
               bin
             );
           }
@@ -769,7 +870,10 @@ export class Templater {
     if (oldRelations) {
       const txt = oldRelations.asText();
 
-      const newTxt = txt.replace("</Relationships>", relationsToAdd + "</Relationships>");
+      const newTxt = txt.replace(
+        "</Relationships>",
+        relationsToAdd + "</Relationships>"
+      );
 
       this._zipTemplate.file("word/_rels/document.xml.rels", newTxt);
     }

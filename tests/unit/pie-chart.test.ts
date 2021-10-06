@@ -5,7 +5,8 @@ import { cloneObject } from "./test-utils";
 import testData from "./__mocks__/pie-chart/pie-chart.data";
 
 describe("Pie chart", () => {
-  it.skip("Pie chart with style", async () => {
+  it("Pie chart with style", async () => {
+    jest.setTimeout(30000);
     const server = new Server();
     const localtestData = cloneObject(testData);
     const result: IReportResult = await server.test(localtestData);

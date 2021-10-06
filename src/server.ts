@@ -1,4 +1,4 @@
-import {config} from "aws-sdk";
+import { config } from "aws-sdk";
 
 import * as dotenv from "dotenv";
 import { FilesProvider } from "./files-provider";
@@ -14,7 +14,7 @@ export class Server {
     const { ACCOUNT_ID, REPORT_ID, REPORT_PARAMS_ID } = process.env;
     config.update({
       accessKeyId: process.env.AWS_KEY,
-      secretAccessKey: process.env.AWS_SECRET
+      secretAccessKey: process.env.AWS_SECRET,
     });
     const reportGenerator = new ReportGenerator(
       new DataProvider(ACCOUNT_ID),
@@ -23,13 +23,20 @@ export class Server {
       new Context(new Date())
     );
 
-    const result: IReportResult = await reportGenerator.generate(REPORT_PARAMS_ID);
+    const result: IReportResult = await reportGenerator.generate(
+      REPORT_PARAMS_ID
+    );
     return result;
-
   }
 
   async test(testData) {
-    const reportGenerator = new ReportGenerator(null, null, null, new Context(new Date()),testData);
+    const reportGenerator = new ReportGenerator(
+      null,
+      null,
+      null,
+      new Context(new Date()),
+      testData
+    );
     const result: IReportResult = await reportGenerator.generate(null);
     return result;
   }

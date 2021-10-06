@@ -58,7 +58,12 @@ export class ReportGenerator {
     } else {
       this._context
         .getRelativeFileFinder()
-        .setFolder(path.normalize(__dirname + `/../tests/unit/__mocks__/${this.testData?.templatesPath}`));
+        .setFolder(
+          path.normalize(
+            __dirname +
+              `/../tests/unit/__mocks__/${this.testData?.templatesPath}`
+          )
+        );
     }
 
     const data = await this.prepareData(reportParamsId);
@@ -73,10 +78,16 @@ export class ReportGenerator {
     }
     /* Read the template metadata from JSON files */
     this._context.getTemplater().imgPath =
-      path.resolve(this._context.getRelativeFileFinder().getFolder(), "efs-images/optimized") || "";
+      path.resolve(
+        this._context.getRelativeFileFinder().getFolder(),
+        "efs-images/optimized"
+      ) || "";
     /* Load JSON template data */
     StyleFields.loadData(this._context, reportDefinition["style"]);
-    Placeholders.loadData(this._context, reportDefinition["placeholderMetadata"]);
+    Placeholders.loadData(
+      this._context,
+      reportDefinition["placeholderMetadata"]
+    );
 
     // Data
     if (reportParams["projectFields"]) {
@@ -84,12 +95,18 @@ export class ReportGenerator {
     }
 
     ItemsStruct.loadData(this._context, itemFieldsStruct);
-    ReadyComponents.loadData(this._context, reportDefinition["readyComponents"]);
+    ReadyComponents.loadData(
+      this._context,
+      reportDefinition["readyComponents"]
+    );
     Formulas.loadData(this._context, reportDefinition["formulas"]);
 
     Items.loadData(this._context, items);
 
-    if(!reportDefinition["general"] || !reportDefinition["general"].templatePath) {
+    if (
+      !reportDefinition["general"] ||
+      !reportDefinition["general"].templatePath
+    ) {
       return { valid: false, errorMessage: TemapltePathIsRequired };
     }
     /* Create the new document from the template */
@@ -104,26 +121,28 @@ export class ReportGenerator {
       );
 
     /* Replace each markup for the real content */
-    let docXmlText = "";
     try {
-      docXmlText = this._context.getTemplater().replace();
-
+      /* Save the new document */
+      let docXmlText = await this._context.getTemplater().replace();
+      const saveParams = this._context.getTemplater().getSaveParams();
+      this.saveFile(reportParamsId, saveParams.fileName, saveParams.buffer);
+      return {
+        valid: true,
+        reportId: reportParamsId,
+        filename: saveParams.fileName,
+        content: docXmlText,
+      };
     } catch (error) {
       const e = {
         message: error.message,
         name: error.name,
         stack: error.stack,
-        properties: error.properties
+        properties: error.properties,
       };
       this._logger.error("Error replazing markups", e);
       this.handleError(reportParamsId);
       return { valid: false };
     }
-
-    /* Save the new document */
-    const saveParams = this._context.getTemplater().getSaveParams();
-    this.saveFile(reportParamsId, saveParams.fileName, saveParams.buffer);
-    return { valid: true, reportId: reportParamsId, filename: saveParams.fileName, content: docXmlText };
   }
 
   handleError(reportParamsId: any) {
@@ -138,7 +157,7 @@ export class ReportGenerator {
       const params = {
         Bucket: process.env.RESULTS_BUCKET,
         Key: fileName,
-        Body: buffer
+        Body: buffer,
       };
       s3.upload(params, (err: any, data: any) => {
         if (err) {
@@ -146,11 +165,13 @@ export class ReportGenerator {
           throw err;
         }
         this.resultSender.updatePath(data.Location).then(() => {
-          this._logger.debug("File uploaded successfully.", { location: data.Location });
+          this._logger.debug("File uploaded successfully.", {
+            location: data.Location,
+          });
         });
       });
-    } else if(process.env.WRITE_LOCAL_TEST_FILE) {
-        fs.writeFileSync(__dirname + "/../test/output/" + fileName, buffer);
+    } else if (process.env.WRITE_LOCAL_TEST_FILE) {
+      fs.writeFileSync(__dirname + "/../test/output/" + fileName, buffer);
     }
   }
 
@@ -164,15 +185,21 @@ export class ReportGenerator {
 
   private async fetchData(reportParamsId: any) {
     this.resultSender.updateStatusStarted();
-    this._logger.debug("Starting to generate new report", { id: reportParamsId });
-    const reportParams = await this.dataProvider.getReportParams(reportParamsId);
+    this._logger.debug("Starting to generate new report", {
+      id: reportParamsId,
+    });
+    const reportParams = await this.dataProvider.getReportParams(
+      reportParamsId
+    );
     if (
       !reportParams ||
       !reportParams.projectId ||
       !reportParams.accountId ||
       !reportParams.reportDefinitionId
     ) {
-      this._logger.error("Report Data was not found or invalid", { error: reportParams });
+      this._logger.error("Report Data was not found or invalid", {
+        error: reportParams,
+      });
       this.resultSender.updateStatusFailed();
       return undefined;
     }

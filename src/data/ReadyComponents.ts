@@ -151,7 +151,7 @@ export class ReadyComponents {
   /**
    * Get the key value for the project field
    */
-  public value(context: Context, key: string): string {
+  public async value(context: Context, key: string): Promise<string> {
     /* Filter the ready components by the placeholder key */
     const readyComponents: IReadyComponents[] = this._readyComponents.filter(
       (keyValue: IReadyComponents) => {
@@ -215,7 +215,7 @@ export class ReadyComponents {
     switch (readyComponents[0].type) {
       /* PieChart type */
       case 6:
-        return context
+        let pieChartRes = await context
           .getPieChart()
           .value(
             context,
@@ -223,6 +223,7 @@ export class ReadyComponents {
             readyComponents[0].splitByField,
             readyComponents[0].chartTitle || readyComponents[0].splitByField
           );
+        return pieChartRes;
       /* Table type */
       case 4:
       case 1:
