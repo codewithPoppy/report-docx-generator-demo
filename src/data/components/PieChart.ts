@@ -3,6 +3,7 @@ import { XML } from "../../word/XML";
 import { IItems } from "../Items";
 import { imageSize } from "image-size";
 import highChartsExporter from "highcharts-export-server";
+import { IPieChartStylingObject, IStyleFields, StyleFields } from "../Style";
 
 export class PieChart {
   constructor() {
@@ -20,11 +21,18 @@ export class PieChart {
 
     // group by filtered items
     const groupByItems: any = filteredItems.reduce((r, a) => {
-      key = a[splitByField];
-      r[key] = r[key] || [];
-      r[key].push(a);
+      let k = a[splitByField];
+      r[k] = r[k] || [];
+      r[k].push(a);
       return r;
     }, Object.create(null));
+
+    // get colors
+    const styleDef: IStyleFields = context.getStyleFields().value(key);
+    const style: IPieChartStylingObject =
+      styleDef && styleDef.style
+        ? (styleDef.style as IPieChartStylingObject)
+        : {};
 
     // get result and chart data
     let resultData = [];
@@ -34,7 +42,11 @@ export class PieChart {
         value: key,
         count: groupByItems[key].length,
       });
-      chartData.push({ name: key, y: groupByItems[key].length });
+      chartData.push({
+        name: key,
+        y: groupByItems[key].length,
+        color: style.valueToColor ? style.valueToColor[key] : undefined,
+      });
     });
     let imgData = await this.makeChart(chartTitle, chartData);
     res += this.insertChart(context, imgData);

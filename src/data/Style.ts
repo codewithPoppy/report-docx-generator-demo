@@ -61,12 +61,16 @@ export interface IListStylingObject {
   fieldsStyle?: IFieldStylingObject[];
 }
 
+export interface IPieChartStylingObject {
+  valueToColor?: any;
+}
+
 /**
  * Project fields data type
  */
 export interface IStyleFields {
   key: string;
-  style?: IBasicStylingObject | ITableStylingObject;
+  style?: IBasicStylingObject | ITableStylingObject | IPieChartStylingObject;
 }
 
 /**
@@ -102,7 +106,7 @@ export class StyleFields {
       /* Prepare the validator fields */
       const validatorFields: any = {
         key: Joi.string().required(),
-        style: Joi.required()
+        style: Joi.required(),
       };
 
       /* Initialize the JOI validator */
@@ -111,10 +115,13 @@ export class StyleFields {
       /* Validate the object data type */
       const { error, value } = validator.validate(dataValue);
       if (error) {
-        this._logger.error("There is an error inside the project field definition", {
-          definition: dataValue,
-          error: error
-        });
+        this._logger.error(
+          "There is an error inside the project field definition",
+          {
+            definition: dataValue,
+            error: error,
+          }
+        );
         process.exit(-1);
       }
 
@@ -128,9 +135,11 @@ export class StyleFields {
    */
   public value(key: string): IStyleFields | undefined {
     /* Filter the project fields by the placeholder key */
-    const projectsFields: IStyleFields[] = this._styleFields.filter((keyValue: IStyleFields) => {
-      return keyValue.key === key;
-    });
+    const projectsFields: IStyleFields[] = this._styleFields.filter(
+      (keyValue: IStyleFields) => {
+        return keyValue.key === key;
+      }
+    );
 
     /* Check if a valid project was found */
     if (!projectsFields || projectsFields.length !== 1) {
