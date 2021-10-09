@@ -28,8 +28,10 @@ const reportDefinition = {
       key: "pie-chart-key",
       style: {
         valueToColor: {
-          "Other": "#ffghjh",
-          "In Space": "green"
+          "Other": "#ffae8d",
+          "In Space": "brown",
+          "Outside": "black",
+          "In The Sun": "yellow"
         }
       },
     },
