@@ -19,7 +19,7 @@
     "docx",
     "template"
   ],
-  "author": "Yarden Gabay",
+  "author": "Helios",
   "license": "ISC",
   "devDependencies": {
     "@types/chai": "^4.2.14",
